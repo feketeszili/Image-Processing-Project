@@ -55,6 +55,8 @@ public  class Functions {
 
     }
 
+    public static void lab5(){}
+
     public static void lab3_1(){
         Mat imBe = imread("mayans.jpg",1);
         Mat maszk = new Mat(3, 3, CV_32FC1);
