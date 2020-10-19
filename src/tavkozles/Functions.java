@@ -55,7 +55,9 @@ public  class Functions {
 
     }
 
-    public static void lab5(){}
+    public static void lab5(){
+        System.out.println("irj ki valamit");
+    }
 
     public static void lab3_1(){
         Mat imBe = imread("mayans.jpg",1);
