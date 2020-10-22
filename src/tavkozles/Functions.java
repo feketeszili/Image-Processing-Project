@@ -111,6 +111,7 @@ public  class Functions {
         // This should return a zero array of the specified size and type.
         // Maybe the GuidedImageFilter does not recognize the zero value
         Mat z = Mat.zeros(im0.rows(), im0.cols(), CV_8UC1);
+        //asd
 
         List<Mat> img = new ArrayList<>();
         Core.split(im0, img);
