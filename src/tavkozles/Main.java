@@ -8,7 +8,8 @@ public class Main {
     public static void main(String[] args) {
 	System.out.println(Core.VERSION);
 	//-------------------------------------------------
-	Functions.lab3_6_MedianBLur();
+	Functions.lab02();
+
 
     }
 }
