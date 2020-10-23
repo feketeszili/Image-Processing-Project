@@ -1,5 +1,6 @@
 package tavkozles;
 import org.opencv.core.*;
+import org.opencv.highgui.HighGui;
 import org.opencv.imgproc.Imgproc;
 import java.lang.Math;
 import java.util.ArrayList;
@@ -93,7 +94,7 @@ public  class Functions {
         im.copyTo(imBig.submat(new Rect((index % 6) * im.cols(), (index / 6) * im.rows(), im.cols(), im.rows())));
         imshow("Ablak", imBig);
         index = (index + 1) % 18;
-        waitKey(0);
+        waitKey();
     }
 
     // This is not working
@@ -111,7 +112,7 @@ public  class Functions {
         // This should return a zero array of the specified size and type.
         // Maybe the GuidedImageFilter does not recognize the zero value
         Mat z = Mat.zeros(im0.rows(), im0.cols(), CV_8UC1);
-        //asd
+
 
         List<Mat> img = new ArrayList<>();
         Core.split(im0, img);
@@ -208,7 +209,6 @@ public  class Functions {
 */
 
     }
-
 
     public static void lab3_1(){
         Mat imBe = imread("mayans.jpg",1);
@@ -386,6 +386,50 @@ public  class Functions {
         imshow("Canny",dst);
         waitKey(0);
 
+
+    }
+
+    public static void lab5_calcHist(){
+        //String filename = args.length > 0 ? args[0] : "../data/lena.jpg";
+        //Mat src = Imgcodecs.imread(filename);
+        Mat src = imread("japan.jpg",1);
+        if (src.empty()) {
+            System.err.println("Cannot read image: " + "japan.jpg");
+            System.exit(0);
+        }
+        List<Mat> bgrPlanes = new ArrayList<>();
+        Core.split(src, bgrPlanes);
+        int histSize = 256;
+        float[] range = {0, 256}; //the upper boundary is exclusive
+        MatOfFloat histRange = new MatOfFloat(range);
+        boolean accumulate = false;
+        Mat bHist = new Mat(), gHist = new Mat(), rHist = new Mat();
+        Imgproc.calcHist(bgrPlanes, new MatOfInt(0), new Mat(), bHist, new MatOfInt(histSize), histRange, accumulate);
+        Imgproc.calcHist(bgrPlanes, new MatOfInt(1), new Mat(), gHist, new MatOfInt(histSize), histRange, accumulate);
+        Imgproc.calcHist(bgrPlanes, new MatOfInt(2), new Mat(), rHist, new MatOfInt(histSize), histRange, accumulate);
+        int histW = 512, histH = 400;
+        int binW = (int) Math.round((double) histW / histSize);
+        Mat histImage = new Mat( histH, histW, CvType.CV_8UC3, new Scalar( 0,0,0) );
+        Core.normalize(bHist, bHist, 0, histImage.rows(), Core.NORM_MINMAX);
+        Core.normalize(gHist, gHist, 0, histImage.rows(), Core.NORM_MINMAX);
+        Core.normalize(rHist, rHist, 0, histImage.rows(), Core.NORM_MINMAX);
+        float[] bHistData = new float[(int) (bHist.total() * bHist.channels())];
+        bHist.get(0, 0, bHistData);
+        float[] gHistData = new float[(int) (gHist.total() * gHist.channels())];
+        gHist.get(0, 0, gHistData);
+        float[] rHistData = new float[(int) (rHist.total() * rHist.channels())];
+        rHist.get(0, 0, rHistData);
+        for( int i = 1; i < histSize; i++ ) {
+            Imgproc.line(histImage, new Point(binW * (i - 1), histH - Math.round(bHistData[i - 1])),
+                    new Point(binW * (i), histH - Math.round(bHistData[i])), new Scalar(255, 0, 0), 2);
+            Imgproc.line(histImage, new Point(binW * (i - 1), histH - Math.round(gHistData[i - 1])),
+                    new Point(binW * (i), histH - Math.round(gHistData[i])), new Scalar(0, 255, 0), 2);
+            Imgproc.line(histImage, new Point(binW * (i - 1), histH - Math.round(rHistData[i - 1])),
+                    new Point(binW * (i), histH - Math.round(rHistData[i])), new Scalar(0, 0, 255), 2);
+        }
+        HighGui.imshow( "Source image", src );
+        HighGui.imshow( "calcHist Demo", histImage );
+        HighGui.waitKey(0);
 
     }
 
