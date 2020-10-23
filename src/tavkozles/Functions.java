@@ -86,33 +86,27 @@ public  class Functions {
         // q = mean_a .* I + mean_b; % Eqn. (8) in the paper;
         Mat q = new Mat();
         Core.add(mean_a.mul(I), mean_b, q);
-        q.convertTo(q, CvType.CV_32F);
+        //q.convertTo(q, CvType.CV_32F);
+        q.convertTo(q, CV_8UC1);
         return q;
     }
 
     public static void showMyImage(Mat imBig, Mat im, int index){
         im.copyTo(imBig.submat(new Rect((index % 6) * im.cols(), (index / 6) * im.rows(), im.cols(), im.rows())));
+        //im.copyTo(imBig.submat(new Rect(index*im.cols(), index*im.rows(), im.cols(), im.rows())));
         imshow("Ablak", imBig);
-        index = (index + 1) % 18;
-        waitKey();
+        //index = (index + 1) % 18;
+        waitKey(0);
     }
 
     // This is not working
-    // 1. issue: does not increse the index
-    // 2. issue: does not recognize the Z pic
     // 3. issue: need to find a solution for the negative arguments
     public static void lab02(){
         int index = 0;
         Mat im0 = imread("eper.jpg", 1);
         Mat imBig = new Mat(  im0.rows() * 3,  im0.cols() * 6, im0.type());
         imBig.setTo(new Scalar(128, 128, 255, 0));
-
-        //Mat z = new Mat(im0.rows(), im0.cols(), CV_8UC1, new Scalar(0));
-
-        // This should return a zero array of the specified size and type.
-        // Maybe the GuidedImageFilter does not recognize the zero value
-        Mat z = Mat.zeros(im0.rows(), im0.cols(), CV_8UC1);
-
+        Mat z = new Mat(im0.rows(), im0.cols(), CV_8UC1, new Scalar(0));
 
         List<Mat> img = new ArrayList<>();
         Core.split(im0, img);
@@ -125,73 +119,73 @@ public  class Functions {
         Mat result =  im0.clone();
         //original
         Core.merge(new ArrayList<>(Arrays.asList(r, g, b)), result);
-        result.convertTo(result, CV_8UC1);
-        showMyImage(imBig, result, index);
-        /*
-        // red is zero
-        Core.merge(new ArrayList<>(Arrays.asList(z, g, b)), result);
-        result.convertTo(result, CV_8UC1);
-        showMyImage(imBig, result, index);
-        // green is zero
-        Core.merge(new ArrayList<>(Arrays.asList(r, z, b)), result);
-        result.convertTo(result, CV_8UC1);
-        showMyImage(imBig, result, index);
-        // blue is zero
-        Core.merge(new ArrayList<>(Arrays.asList(r, g, z)), result);
-        result.convertTo(result, CV_8UC1);
-        showMyImage(imBig, result, index);
-        // green and blue are zero
-        Core.merge(new ArrayList<>(Arrays.asList(r, z, z)), result);
-        result.convertTo(result, CV_8UC1);
-        showMyImage(imBig, result, index);
-        // red and blue are zero
-        Core.merge(new ArrayList<>(Arrays.asList(z, g, z)), result);
-        result.convertTo(result, CV_8UC1);
-        showMyImage(imBig, result, index);
-        // red and green are zero
-        Core.merge(new ArrayList<>(Arrays.asList(z, z, b)), result);
-        result.convertTo(result, CV_8UC1);
         showMyImage(imBig, result, index);
 
-         */
+        // red is zero
+        index++;
+        Core.merge(new ArrayList<>(Arrays.asList(z, g, b)), result);
+        showMyImage(imBig, result, index);
+        // green is zero
+        index++;
+        Core.merge(new ArrayList<>(Arrays.asList(r, z, b)), result);
+        showMyImage(imBig, result, index);
+        // blue is zero
+        index++;
+        Core.merge(new ArrayList<>(Arrays.asList(r, g, z)), result);
+        showMyImage(imBig, result, index);
+        // green and blue are zero
+        index++;
+        Core.merge(new ArrayList<>(Arrays.asList(r, z, z)), result);
+        showMyImage(imBig, result, index);
+        // red and blue are zero
+        index++;
+        Core.merge(new ArrayList<>(Arrays.asList(z, g, z)), result);
+        showMyImage(imBig, result, index);
+        // red and green are zero
+        index++;
+        Core.merge(new ArrayList<>(Arrays.asList(z, z, b)), result);
+        showMyImage(imBig, result, index);
+
         //original
+        index++;
         Core.merge(new ArrayList<>(Arrays.asList(r, g, b)), result);
-        result.convertTo(result, CV_8UC1);
         showMyImage(imBig, result, index);
         // 1. permutation
+        index++;
         Core.merge(new ArrayList<>(Arrays.asList(r, b, g)), result);
-        result.convertTo(result, CV_8UC1);
         showMyImage(imBig, result, index);
         // 2. permutation
+        index++;
         Core.merge(new ArrayList<>(Arrays.asList(g, r, b)), result);
-        result.convertTo(result, CV_8UC1);
         showMyImage(imBig, result, index);
         // 3. permutation
+        index++;
         Core.merge(new ArrayList<>(Arrays.asList(g, b, r)), result);
-        result.convertTo(result, CV_8UC1);
         showMyImage(imBig, result, index);
         // 4. permutation
+        index++;
         Core.merge(new ArrayList<>(Arrays.asList(b, r, g)), result);
-        result.convertTo(result, CV_8UC1);
         showMyImage(imBig, result, index);
         // 5. permutation
+        index++;
         Core.merge(new ArrayList<>(Arrays.asList(b, g, r)), result);
-        result.convertTo(result, CV_8UC1);
         showMyImage(imBig, result, index);
+/*
         // red is negative
-       /* Core.merge(new ArrayList<>(Arrays.asList(~r, g, b)), result);
-        result.convertTo(result, CV_8UC1);
+        index++;
+        Core.merge(new ArrayList<>(Arrays.asList(~r, g, b)), result);
         showMyImage(imBig, result, index);
         // green is negative
+        index++;
         Core.merge(new ArrayList<>(Arrays.asList(r, ~g, b)), result);
-        result.convertTo(result, CV_8UC1);
         showMyImage(imBig, result, index);
         // blue is negative
+        index++;
         Core.merge(new ArrayList<>(Arrays.asList(r, g, ~b)), result);
-        result.convertTo(result, CV_8UC1);
         showMyImage(imBig, result, index);
 
         // ycrcb coding
+        index++;
         cvtColor(im0, result, COLOR_BGR2YCrCb);
         List<Mat> ycrcb = new ArrayList<>();
         Core.split(result, ycrcb);
@@ -200,14 +194,14 @@ public  class Functions {
         Mat cb = GuidedImageFilter(img.get(2), img.get(2), q, eps);
         Core.merge(new ArrayList<>(Arrays.asList(~y, cr, cb)), result);
         cvtColor(im0, result, COLOR_YCrCb2BGR);
-        result.convertTo(result, CV_8UC1);
+        showMyImage(imBig, result, index);
 
         //originals negative
+        index++;
         Core.merge(new ArrayList<>(Arrays.asList(~r, ~g, ~b)), result);
-        result.convertTo(result, CV_8UC1);
         showMyImage(imBig, result, index);
-*/
 
+*/
     }
 
     public static void lab3_1(){

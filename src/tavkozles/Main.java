@@ -8,7 +8,7 @@ public class Main {
     public static void main(String[] args) {
 	System.out.println(Core.VERSION);
 	//-------------------------------------------------
-	Functions.lab5_calcHist();
+	Functions.lab02();
 
 
     }
